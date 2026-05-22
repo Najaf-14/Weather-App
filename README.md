@@ -80,11 +80,9 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser. That's
 
 This project uses [WeatherAPI.com](https://www.weatherapi.com/) for live data. The API key is currently stored directly in `src/services/weatherApi.js`.
 
-> ⚠️ **Before pushing to GitHub**, move your key to an environment variable so it doesn't end up in your commit history:
-
 ```bash
 # .env (create this file in the project root)
-REACT_APP_WEATHER_API_KEY=your_key_here
+REACT_APP_WEATHER_API_KEY=f099489b06dc472bab6160127260205
 ```
 
 ```js

@@ -1,38 +1,499 @@
-.App {
-  text-align: center;
+/* ===== RESET & GLOBAL ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at 10% 20%, #0b1120, #030712);
+  color: #eef2ff;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+  backdrop-filter: blur(2px);
+  padding-bottom: 3rem;
+}
+
+/* subtle animated grain / noise overlay for depth */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1.2px, transparent 1.2px);
+  background-size: 36px 36px;
   pointer-events: none;
+  z-index: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* ===== GLASS CARD CORE ===== */
+.glass-card,
+.card,
+.forecast-card,
+.favorite-item,
+.navbar,
+input,
+button {
+  backdrop-filter: blur(14px);
+  background: rgba(12, 20, 35, 0.55);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 2rem;
+  transition: all 0.25s ease;
+  margin-top: 1rem;
+}
+
+.glass-card:hover,
+.card:hover,
+.forecast-card:hover,
+.favorite-item:hover {
+  border-color: rgba(139, 92, 246, 0.7);
+  background: rgba(20, 30, 50, 0.7);
+  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(139, 92, 246, 0.2) inset;
+  transform: translateY(-3px);
+}
+
+/* ===== NAVBAR (glassmorphism + new violet/indigo flair) ===== */
+.navbar {
+  background: rgba(8, 14, 26, 0.7);
+  backdrop-filter: blur(20px);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-radius: 0 0 2rem 2rem;
+  margin: 0 1rem;
+}
+
+.logo {
+  font-size: 1.7rem;
+  font-weight: 800;
+  background: linear-gradient(130deg, #c084fc, #38bdf8, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.3px;
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.links {
+  display: flex;
+  gap: 2rem;
+}
+
+.links a {
+  color: #cbd5e6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+  font-size: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.links a:hover {
+  color: #c084fc;
+  border-bottom-color: #a78bfa;
+  text-shadow: 0 0 5px #a78bfa;
+}
+
+/* ===== CONTAINER & TYPOGRAPHY ===== */
+.container {
+  max-width: 1300px;
+  margin: 2rem auto;
+  padding: 0 1.8rem;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.page-title {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  background: linear-gradient(125deg, #e0d4ff, #9ec8ff, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  letter-spacing: -0.5px;
+}
+
+/* ===== SEARCH SECTION ===== */
+.search-section {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+input {
+  background: rgba(10, 18, 32, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  padding: 0.9rem 1.4rem;
+  width: 290px;
+  border-radius: 3rem;
+  color: #f1f5f9;
+  font-size: 1rem;
+  outline: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+input:focus {
+  border-color: #c084fc;
+  box-shadow: 0 0 18px rgba(139, 92, 246, 0.5);
+  background: rgba(18, 28, 45, 0.85);
+}
+
+button {
+  background: linear-gradient(105deg, #1e1a3a, #11152a);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(167, 139, 250, 0.7);
+  padding: 0.85rem 2rem;
+  border-radius: 3rem;
+  font-weight: 600;
+  color: #f0eefc;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  letter-spacing: 0.4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+button:hover {
+  background: linear-gradient(105deg, #2d2555, #191e3a);
+  border-color: #c084fc;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px -8px rgba(139, 92, 246, 0.4);
+}
+
+/* ===== CURRENT WEATHER CARD ===== */
+.card {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px);
+  padding: 2rem 1.8rem;
+  margin: 2rem auto;
+  width: 360px;
+  border-radius: 2.2rem;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  box-shadow: 0 25px 40px -12px #0000004d;
+}
+
+.card h2 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.temp {
+  font-size: 3.4rem;
+  font-weight: 800;
+  background: linear-gradient(145deg, #e2e8ff, #b9c8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0.5rem 0;
+}
+
+.condition {
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  opacity: 0.9;
+  color: #cdd9ff;
+}
+
+/* ===== FORECAST GRID (modern glass + responsive) ===== */
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1.8rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.forecast-card {
+  background: rgba(18, 26, 45, 0.6);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem 1rem;
+  border-radius: 1.8rem;
+  text-align: center;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  transition: all 0.2s;
+}
+
+.forecast-day {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #c9b6ff;
+  margin-bottom: 0.6rem;
+}
+
+.forecast-temp {
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+  background: linear-gradient(135deg, #f0eefe, #bbd7fb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.forecast-desc {
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  opacity: 0.85;
+}
+
+/* ===== FAVORITES SECTION (glass + responsive) ===== */
+.favorites-section {
+  margin-top: 2rem;
+}
+
+.favorites-title {
+  font-size: 1.8rem;
+  margin: 1rem 0 1.5rem;
+  background: linear-gradient(125deg, #e0cffc, #b794f4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.favorites-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.3rem;
+  margin-top: 1rem;
+}
+
+.favorite-item {
+  background: rgba(12, 20, 35, 0.7);
+  backdrop-filter: blur(12px);
+  padding: 0.75rem 1.4rem;
+  min-width: 150px;
+  border-radius: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgba(139, 92, 246, 0.45);
+}
+
+.favorite-item span {
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.favorite-item span:hover {
+  color: #cfaaff;
+  text-shadow: 0 0 3px #a78bfa;
+}
+
+.remove-fav {
+  background: transparent;
+  border: none;
+  color: #f9a8d4;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  border-radius: 30px;
+  transition: 0.2s;
+  box-shadow: none;
+  line-height: 1;
+}
+
+.remove-fav:hover {
+  color: #ffb8e0;
+  transform: scale(1.15);
+  background: none;
+}
+
+.empty-message {
+  opacity: 0.7;
+  font-style: italic;
+  background: rgba(20, 20, 45, 0.4);
+  backdrop-filter: blur(4px);
+  padding: 0.8rem 1.2rem;
+  border-radius: 3rem;
+  width: fit-content;
+  margin: 1rem auto;
+  border: 1px dashed #a78bfa;
+}
+
+/* ===== RESPONSIVENESS (mobile & tablet perfection) ===== */
+@media (max-width: 768px) {
+  .navbar {
+    margin: 0 0.5rem;
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 0 1.5rem 1.5rem;
+    flex-direction: column;
+  }
+  
+  .links {
+    gap: 1.5rem;
+  }
+  
+  .container {
+    padding: 0 1.2rem;
+    margin: 1.2rem auto;
+  }
+  
+  .page-title {
+    font-size: 1.8rem;
+  }
+  
+  .card {
+    width: 95%;
+    max-width: 340px;
+    padding: 1.6rem;
+  }
+  
+  .temp {
+    font-size: 2.8rem;
+  }
+  
+  .forecast-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  
+  .forecast-card {
+    padding: 1rem 0.8rem;
+  }
+  
+  .forecast-temp {
+    font-size: 1.6rem;
+  }
+  
+  input {
+    width: 240px;
+    padding: 0.8rem 1.2rem;
+  }
+  
+  button {
+    padding: 0.7rem 1.5rem;
+  }
+  
+  .favorite-item {
+    min-width: 130px;
+    padding: 0.6rem 1rem;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.7rem 1rem;
+  }
+  
+  .logo {
+    font-size: 1.4rem;
+  }
+  
+  .links a {
+    font-size: 0.85rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .search-section {
+    gap: 0.7rem;
+  }
+  
+  input {
+    width: 100%;
+    max-width: 260px;
+  }
+  
+  button {
+    width: auto;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.85rem;
+  }
+  
+  .card {
+    width: 100%;
+    padding: 1.4rem;
+  }
+  
+  .temp {
+    font-size: 2.4rem;
+  }
+  
+  .forecast-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .forecast-card {
+    width: 100%;
+  }
+  
+  .favorite-item {
+    width: 100%;
+    max-width: 220px;
+    justify-content: space-between;
+  }
+  
+  .favorites-list {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
-.App-link {
-  color: #61dafb;
+/* ===== ADDITIONAL GLOW & DETAILS ===== */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #a78bfa, #c084fc, transparent);
+  margin: 2rem 0 1rem;
 }
 
-@keyframes App-logo-spin {
+/* for any extra buttons inside favorites: reset weird bg */
+.favorite-item .remove-fav {
+  background: transparent !important;
+  backdrop-filter: none;
+  border: none;
+  padding: 0 6px;
+  font-size: 1.3rem;
+}
+
+/* hover effect for forecast & fav items */
+.forecast-card:hover .forecast-temp {
+  text-shadow: 0 0 5px #d9c8ff;
+}
+
+/* make the glass effect smoother overall */
+#currentWeather, #forecastContainer, .favorites-list {
+  animation: fadeSlideUp 0.4s ease-out;
+}
+
+@keyframes fadeSlideUp {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(12px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
