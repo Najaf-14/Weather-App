@@ -8,7 +8,7 @@ A clean, responsive weather dashboard built with React. Search any city to get l
 
 - 🔍 **Search by city** — instantly pull up current weather conditions anywhere in the world
 - 🌡️ **Weather details** — temperature, humidity, wind speed, and a condition summary
-- 📅 **5-day forecast** — see what's coming so you can plan ahead
+- 📅 **3-day forecast** — see what's coming so you can plan ahead
 - ⭐ **Favorites** — save cities you check often so you don't have to retype them
 - 🔀 **Client-side routing** — smooth navigation between pages with React Router
 
